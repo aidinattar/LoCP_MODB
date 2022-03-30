@@ -52,9 +52,9 @@ L=60
 DX = 50
 bias = 5
 
-iterations = 20
-train_accuracy =     val_accuracy     = np.zeros(shape=(len(dim), iterations))
-train_accuracy_CNN = val_accuracy_CNN = np.zeros(shape=(len(dim), iterations))
+iterations = 50
+train_accuracy = np.zeros(shape=(len(dim), iterations), dtype=object)
+val_accuracy   = np.zeros(shape=(len(dim), iterations), dtype=object)
 
 for z in range(iterations):
     x = np.array([np.zeros(shape=(i, 60)) for i in range(len(dim))])
@@ -68,13 +68,14 @@ for z in range(iterations):
                 x[k][i][0] = x[k][i-1][-1] + jump(bias,DX)
             for j in range(1,L):
                 x[k][i][j] = x[k][i][j-1] + jump(bias,DX)
-            y[k][i] = i%3 
+            y[k][i] = i%3
             if y[k][i]>0:
                 j0 = np.random.randint(0,L-1-Z)
                 sign = 3-2*y[k][i]
                 for j in range(Z):
                     x[k][i][j0+j] += sign*pattern(j,Z,A)
     df = [get_df(x[i]) for i in range(len(dim))]
+
     x_features = [extract_features(df[i], #our dataframe
                                column_id='id', #sample id, from 0 to N
                                column_sort='time', #timestep, from 0 to t
@@ -82,12 +83,12 @@ for z in range(iterations):
                                column_value='value', #value of input 
                                n_jobs=4) #number of cores
                   for i in range(len(dim))]
+
     #remove columns with NaN or inf
     for i in range(len(dim)):
         x_features[i].replace([np.inf, -np.inf], np.nan)
         x_features[i] = x_features[i].dropna(axis='columns')
     #split data into training and validation
-
     perc_train=0.8
     N_train=[int(perc_train*len(x[i]))  for i in range(len(dim))]
     x_train=[x_features[i][:N_train[i]] for i in range(len(dim))]
@@ -96,13 +97,9 @@ for z in range(iterations):
     y_val  =[y[i][N_train[i]:]          for i in range(len(dim))]
     N_val  =[len(x_val[i])              for i in range(len(dim))]
 
-
     for i in range(len(dim)):
         x_train[i].drop(columns=['value__sample_entropy'],inplace=True)
         x_val[i].drop(columns=['value__sample_entropy'],inplace=True)
-
-    # reproducibility
-    np.random.seed(12345)
 
     #define parameters for xgboost
     params = {'max_depth':6,'min_child_weight':1,\
@@ -110,8 +107,6 @@ for z in range(iterations):
 
     #build model with given params
     model = [XGBClassifier(**params) for i in range(len(dim))]
-    scaler = StandardScaler()
-    x_trainScaled = [scaler.fit_transform(x_train[i]) for i in range(len(dim))]
 
     #fit
     for i in range(len(dim)):
@@ -132,4 +127,4 @@ for z in range(iterations):
 results_fits = pd.DataFrame({'validation':  np.concatenate([train_accuracy[i,:]                for i in range(len(dim))]),
                              'training':    np.concatenate([val_accuracy[i,:]                  for i in range(len(dim))]),
                              'group':       np.concatenate([np.repeat(f'{dim[i]}', iterations) for i in range(len(dim))])})
-results_fits.to_csv('XGB_3.csv')
+results_fits.to_csv('XGB_6.csv')

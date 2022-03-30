@@ -24,7 +24,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 14
-from tsfresh import extract_features
 from xgboost import XGBClassifier, plot_tree
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
@@ -93,8 +92,9 @@ A=500
 DX = 50
 bias = 5
 
-iterations = 15
-train_accuracy =     val_accuracy     = np.zeros(shape=(len(dim), iterations))
+iterations = 50
+train_accuracy = np.zeros(shape=(len(dim), iterations))
+val_accuracy   = np.zeros(shape=(len(dim), iterations))
 train_accuracy_CNN = val_accuracy_CNN = np.zeros(shape=(len(dim), iterations))
 
 init_best        = 'GlorotUniform' #is GlorotUniform
@@ -108,8 +108,8 @@ dim = [20, 50, 100, 150, 200, 250, 300, 400, 500]
 
 
 for z in range(iterations):
-    x = np.array([np.zeros(shape=(i, 60)) for i in range(len(dim))])
-    y = np.array([np.zeros(shape=(i    )) for i in range(len(dim))])
+    x = np.array([np.zeros(shape=(i, 60)) for i in range(len(dim))], dtype=object)
+    y = np.array([np.zeros(shape=(i    )) for i in range(len(dim))], dtype=object)
 
     # size of each sample of the timeseries
     L=60
@@ -164,4 +164,4 @@ for z in range(iterations):
 results_fits = pd.DataFrame({'validation':  np.concatenate([train_accuracy[i,:]                for i in range(len(dim))]),
                              'training':    np.concatenate([val_accuracy[i,:]                  for i in range(len(dim))]),
                              'group':       np.concatenate([np.repeat(f'{dim[i]}', iterations) for i in range(len(dim))])})
-results_fits.to_csv('CNN_4.csv')
+results_fits.to_csv('CNN_6.csv')

@@ -27,3 +27,21 @@ Use of DNNs for binary classification in 2D with Keras:
 ## Week 3
 
 Convolutional Neural Networks
+
+Use of CNNs for pattern recognition with Keras:
+- Behaviour of the CNN training and validation curves as a function of the parameters such as the amplitude A;
+- Behaviour of the curves varying the regularization factor and function
+- Finding the best model for our task.
+
+## Week 4
+
+XGBoost trees
+
+Use of XGBoost trees for pattern recognition and binary classification:
+- Comparison with the results of CNN;
+- Feature extraction using 'tsfresh';
+- Combination of the feature extraction with a CNN;
+- Behaviour of the accuracy as a function of the parameters used
+- Study of the best simple XGBoost model keeping a good accuracy.
+
+## Week 5

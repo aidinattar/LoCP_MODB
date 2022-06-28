@@ -48,4 +48,8 @@ Use of XGBoost trees for pattern recognition and binary classification:
 
 DBSCAN and t-SNE
 
-Use of DBSCAN and t-SNE for visualization and clustering.
+Use of DBSCAN and t-SNE for visualization and clustering:
+- The role of dimensions;
+- The role of perplexity;
+- Tuning of the parameters in DBSCAN algorithm for clustering
+- t-SNE for clustering

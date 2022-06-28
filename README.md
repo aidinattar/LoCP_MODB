@@ -45,3 +45,7 @@ Use of XGBoost trees for pattern recognition and binary classification:
 - Study of the best simple XGBoost model keeping a good accuracy.
 
 ## Week 5
+
+DBSCAN and t-SNE
+
+Use of DBSCAN and t-SNE for visualization and clustering.
